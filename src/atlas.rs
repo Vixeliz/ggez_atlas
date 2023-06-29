@@ -10,12 +10,12 @@ use texture_packer::texture::Texture;
 use texture_packer::TexturePacker;
 use texture_packer::TexturePackerConfig;
 
-pub struct TextureAtlasBuilder {
-    pub images: HashMap<String, GImage>,
+pub struct TextureAtlasBuilder<H: std::hash::Hash> {
+    pub images: HashMap<H, GImage>,
     pub packer_conf: TexturePackerConfig,
 }
 
-impl Default for TextureAtlasBuilder {
+impl Default for TextureAtlasBuilder<String> {
     fn default() -> Self {
         let config = TexturePackerConfig {
             max_width: 1024,
@@ -33,35 +33,35 @@ impl Default for TextureAtlasBuilder {
     }
 }
 
-pub struct TextureAtlas {
+pub struct TextureAtlas<H: std::hash::Hash> {
     pub image: GImage,
     pub size: mint::Point2<u32>,
-    pub textures: HashMap<String, Rect>,
+    pub textures: HashMap<H, Rect>,
 }
 
-impl TextureAtlasBuilder {
-    pub fn add_texture(&mut self, image_name: String, image: GImage) {
-        self.images.insert(image_name, image);
+impl<H: std::hash::Hash + std::cmp::Eq + std::clone::Clone> TextureAtlasBuilder<H> {
+    pub fn add_texture(&mut self, hash: H, image: GImage) {
+        self.images.insert(hash, image);
     }
 
-    pub fn build(&mut self, ctx: &mut Context) -> GameResult<TextureAtlas> {
+    pub fn build(&mut self, ctx: &mut Context) -> GameResult<TextureAtlas<H>> {
         let mut packer = TexturePacker::new_skyline(self.packer_conf);
-        for (name, image) in self.images.iter() {
+        for (hash, image) in self.images.iter() {
             let pixels = image.to_pixels(ctx)?;
             let img = image::DynamicImage::ImageRgba8(
                 image::RgbaImage::from_raw(image.width(), image.height(), pixels).unwrap(),
             );
-            packer.pack_own(name, img).unwrap();
+            packer.pack_own(hash.clone(), img).unwrap();
         }
         let mut textures = HashMap::default();
-        for (name, frame) in packer.get_frames() {
+        for (hash, frame) in packer.get_frames() {
             let rect = Rect {
                 x: frame.frame.x as f32,
                 y: frame.frame.y as f32,
                 w: frame.frame.w as f32,
                 h: frame.frame.h as f32,
             };
-            textures.insert(name.to_string(), rect);
+            textures.insert(hash.clone(), rect);
         }
 
         let exporter = ImageExporter::export(&packer).unwrap();
@@ -80,5 +80,3 @@ impl TextureAtlasBuilder {
         })
     }
 }
-
-impl TextureAtlas {}

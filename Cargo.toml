@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-ggez = {git = "https://github.com/ggez/ggez", branch = "devel"}
+ggez = {git = "https://github.com/vixeliz/ggez", branch = "devel"}
 image = "0.24.6"
 mint = "0.5.9"
 texture_packer = "0.25.0"

@@ -12,7 +12,7 @@ use ggez_atlas::atlas::{TextureAtlas, TextureAtlasBuilder};
 
 struct MainState {
     pos_x: f32,
-    texture_atlas: TextureAtlas,
+    texture_atlas: TextureAtlas<String>,
 }
 
 impl MainState {
@@ -49,8 +49,8 @@ impl event::EventHandler for MainState {
             .texture_atlas
             .textures
             .get("/tile_0001.png")
-            .unwrap()
-            .clone();
+            .copied()
+            .unwrap();
         src_rect.x /= self.texture_atlas.size.x as f32;
         src_rect.y /= self.texture_atlas.size.y as f32;
         src_rect.w /= self.texture_atlas.size.x as f32;
