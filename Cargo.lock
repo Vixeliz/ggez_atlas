@@ -828,6 +828,7 @@ dependencies = [
 [[package]]
 name = "ggez"
 version = "0.9.0"
+source = "git+https://github.com/ggez/ggez?branch=devel#666e28c825f69d55302c25373fccd02f4fe64e08"
 dependencies = [
  "approx",
  "bitflags 2.3.3",

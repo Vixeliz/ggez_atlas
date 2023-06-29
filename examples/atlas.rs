@@ -1,5 +1,7 @@
 //! The simplest possible example that does something.
 
+use std::{env, path};
+
 use ggez::{
     event,
     glam::*,
@@ -67,7 +69,15 @@ impl event::EventHandler for MainState {
 }
 
 pub fn main() -> GameResult {
-    let cb = ggez::ContextBuilder::new("super_simple", "ggez");
+    let resource_dir = if let Ok(manifest_dir) = env::var("CARGO_MANIFEST_DIR") {
+        let mut path = path::PathBuf::from(manifest_dir);
+        path.push("resources");
+        path
+    } else {
+        path::PathBuf::from("./resources")
+    };
+
+    let cb = ggez::ContextBuilder::new("atlas", "ggez").add_resource_path(resource_dir);
     let (mut ctx, event_loop) = cb.build()?;
     let state = MainState::new(&mut ctx)?;
     event::run(ctx, event_loop, state)
