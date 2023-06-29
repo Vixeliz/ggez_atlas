@@ -1,0 +1,13 @@
+[package]
+name = "ggez_atlas"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+ggez = {path = "../ggez"}
+# ggez = "0.9.0"
+image = "0.24.6"
+mint = "0.5.9"
+texture_packer = "0.25.0"
