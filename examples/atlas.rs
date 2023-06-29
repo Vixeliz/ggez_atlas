@@ -3,7 +3,7 @@
 use ggez::{
     event,
     glam::*,
-    graphics::{self, Image},
+    graphics::{self, DrawParam, Image, Text},
     Context, GameResult,
 };
 use ggez_atlas::atlas::{TextureAtlas, TextureAtlasBuilder};
@@ -42,6 +42,23 @@ impl event::EventHandler for MainState {
             graphics::Canvas::from_frame(ctx, graphics::Color::from([0.1, 0.2, 0.3, 1.0]));
 
         canvas.draw(&self.texture_atlas.image, Vec2::new(self.pos_x, 380.0));
+
+        let mut src_rect = self
+            .texture_atlas
+            .textures
+            .get("/tile_0001.png")
+            .unwrap()
+            .clone();
+        src_rect.x /= self.texture_atlas.size.x as f32;
+        src_rect.y /= self.texture_atlas.size.y as f32;
+        src_rect.w /= self.texture_atlas.size.x as f32;
+        src_rect.h /= self.texture_atlas.size.y as f32;
+        let param = DrawParam::new()
+            .dest(Vec2::new(self.pos_x, 100.0))
+            .src(src_rect);
+        canvas.draw(&self.texture_atlas.image, param);
+
+        canvas.draw(&Text::new(format!("{:?}", src_rect)), Vec2::new(0.0, 0.0));
 
         canvas.finish(ctx)?;
 
