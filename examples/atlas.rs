@@ -47,7 +47,8 @@ impl event::EventHandler for MainState {
 
         let param = DrawParam::new().dest(Vec2::new(self.pos_x, 100.0)).src(
             self.texture_atlas
-                .get_src_rect("/tile_0001.png".to_string()),
+                .get_src_rect(&"/tile_0001.png".to_string())
+                .unwrap(),
         );
         canvas.draw(&self.texture_atlas.image, param);
 
@@ -55,7 +56,7 @@ impl event::EventHandler for MainState {
             &Text::new(format!(
                 "{:?}",
                 self.texture_atlas
-                    .get_src_rect("/tile_0001.png".to_string())
+                    .get_src_rect(&"/tile_0001.png".to_string())
             )),
             Vec2::new(0.0, 0.0),
         );
