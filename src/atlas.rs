@@ -33,6 +33,7 @@ impl Default for TextureAtlasBuilder<String> {
     }
 }
 
+#[derive(Clone)]
 pub struct TextureAtlas<H: std::hash::Hash> {
     pub image: GImage,
     pub size: mint::Point2<u32>,
