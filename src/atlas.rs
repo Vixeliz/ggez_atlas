@@ -22,7 +22,7 @@ impl Default for TextureAtlasBuilder<String> {
             max_height: 1024,
             allow_rotation: false,
             texture_outlines: false,
-            border_padding: 2,
+            border_padding: 0,
             texture_padding: 2,
             ..Default::default()
         };
@@ -38,6 +38,21 @@ pub struct TextureAtlas<H: std::hash::Hash> {
     pub image: GImage,
     pub size: mint::Point2<u32>,
     pub textures: HashMap<H, Rect>,
+}
+
+impl<H: std::hash::Hash + std::cmp::Eq + std::clone::Clone> TextureAtlas<H> {
+    pub fn get_src_rect(&self, hash: H) -> Rect {
+        return if let Some(src_rect) = self.textures.get(&hash) {
+            let mut final_rect = src_rect.clone();
+            final_rect.x /= self.size.x as f32;
+            final_rect.y /= self.size.y as f32;
+            final_rect.w /= self.size.x as f32;
+            final_rect.h /= self.size.y as f32;
+            final_rect
+        } else {
+            Rect::zero()
+        };
+    }
 }
 
 impl<H: std::hash::Hash + std::cmp::Eq + std::clone::Clone> TextureAtlasBuilder<H> {

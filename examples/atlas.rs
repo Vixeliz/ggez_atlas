@@ -45,22 +45,20 @@ impl event::EventHandler for MainState {
 
         canvas.draw(&self.texture_atlas.image, Vec2::new(self.pos_x, 380.0));
 
-        let mut src_rect = self
-            .texture_atlas
-            .textures
-            .get("/tile_0001.png")
-            .copied()
-            .unwrap();
-        src_rect.x /= self.texture_atlas.size.x as f32;
-        src_rect.y /= self.texture_atlas.size.y as f32;
-        src_rect.w /= self.texture_atlas.size.x as f32;
-        src_rect.h /= self.texture_atlas.size.y as f32;
-        let param = DrawParam::new()
-            .dest(Vec2::new(self.pos_x, 100.0))
-            .src(src_rect);
+        let param = DrawParam::new().dest(Vec2::new(self.pos_x, 100.0)).src(
+            self.texture_atlas
+                .get_src_rect("/tile_0001.png".to_string()),
+        );
         canvas.draw(&self.texture_atlas.image, param);
 
-        canvas.draw(&Text::new(format!("{:?}", src_rect)), Vec2::new(0.0, 0.0));
+        canvas.draw(
+            &Text::new(format!(
+                "{:?}",
+                self.texture_atlas
+                    .get_src_rect("/tile_0001.png".to_string())
+            )),
+            Vec2::new(0.0, 0.0),
+        );
 
         canvas.finish(ctx)?;
 
